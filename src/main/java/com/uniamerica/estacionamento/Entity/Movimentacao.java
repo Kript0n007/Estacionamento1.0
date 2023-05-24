@@ -65,6 +65,8 @@ public class Movimentacao extends Abstract{
         return valorHora.multiply(BigDecimal.valueOf(horasUtilizadas));
     }
 
+
+
     public String gerarRelatorio() {
         // Crie a estrutura do relatório com as informações necessárias
         StringBuilder relatorio = new StringBuilder();
@@ -72,19 +74,11 @@ public class Movimentacao extends Abstract{
         relatorio.append("Data e Hora de Saída: ").append(saida).append("\n");
         relatorio.append("Condutor: ").append(condutor.getNome()).append("\n");
         relatorio.append("Veículo: ").append(veiculo.getModelo()).append("\n");
+        relatorio.append("Placa: ").append(veiculo.getPlaca()).append("\n");
         relatorio.append("Quantidade de Horas Utilizadas: ").append(calcularHorasUtilizadas()).append("\n");
         relatorio.append("Valor a Pagar: ").append(calcularValorTotal()).append("\n");
+        relatorio.append("Valor Desconto: ").append(valorDesconto);
         // Adicione outras informações relevantes ao relatório
-
-        System.out.println("Relatório da Movimentação:");
-        System.out.println("Data e Hora de Entrada: " + entrada);
-        System.out.println("Data e Hora de Saída: " + saida);
-        System.out.println("Condutor: " + condutor.getNome());
-        System.out.println("Veículo: " + veiculo.getModelo().getNome());
-        System.out.println("Placa: " + veiculo.getPlaca());
-        System.out.println("Quantidade de Horas: " + calcularHorasUtilizadas());
-        System.out.println("Valor a Pagar: " + valorTotal);
-        System.out.println("Valor de Desconto: " + valorDesconto);
 
         return relatorio.toString();
     }

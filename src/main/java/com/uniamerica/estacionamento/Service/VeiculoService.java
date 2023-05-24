@@ -31,6 +31,7 @@ public class VeiculoService {
 
     @Transactional(rollbackFor = Exception.class)
     public void cadastrar(final Veiculo veiculo){
+
         Assert.isTrue(veiculo.getModelo() != null, "Erro, digite um modelo");
         Assert.isTrue(veiculo.getTipo() != null, "Erro, digite um tipo");
         Assert.isTrue(veiculo.getCor() != null, "Erro, digite uma cor");

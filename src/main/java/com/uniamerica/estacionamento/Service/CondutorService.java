@@ -30,8 +30,10 @@ public class CondutorService {
     @Transactional(rollbackFor =  Exception.class)
     public ResponseEntity<String> cadastrar(final Condutor condutor) {
 
+        String regex = ".*\\d+.*";
+        Assert.isTrue(!condutor.getNome().matches(regex), "Escreva so letras");
         Assert.isTrue(condutor.getNome() != null , "Error digite um numero");
-        Assert.isTrue(condutor.getNome().length() > 2 , "Nome nao fornecido");
+        Assert.isTrue(!condutor.getNome().isBlank(), "Nome nao fornecido");
 
         Assert.isTrue(condutor.getCpf() != null, "CPF, nao informado");
         String regexCpf = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$";

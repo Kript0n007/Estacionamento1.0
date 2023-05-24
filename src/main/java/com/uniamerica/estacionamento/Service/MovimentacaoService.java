@@ -1,9 +1,6 @@
 package com.uniamerica.estacionamento.Service;
 
-import com.uniamerica.estacionamento.Entity.Condutor;
-import com.uniamerica.estacionamento.Entity.Configuracao;
 import com.uniamerica.estacionamento.Entity.Movimentacao;
-import com.uniamerica.estacionamento.Entity.Veiculo;
 import com.uniamerica.estacionamento.Respository.CondutorRepository;
 import com.uniamerica.estacionamento.Respository.ConfiguracaoRepository;
 import com.uniamerica.estacionamento.Respository.MovimentacaoRepository;
@@ -15,11 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,6 +26,9 @@ public class MovimentacaoService {
 
     @Autowired
     private CondutorRepository condutorRepository;
+
+    @Autowired
+    private ConfiguracaoService configuracaoService;
 
     @Transactional(rollbackOn = Exception.class)
     public void cadastrar(Movimentacao movimentacao){
@@ -62,28 +58,25 @@ public class MovimentacaoService {
 
         this.movimentacaoRepository.save(movimentacao);
     }
-    @Transactional(rollbackOn = Exception.class)
-    public void saida(final Long id) {
 
-        final Movimentacao movimentacao = this.movimentacaoRepository.findById(id).orElse(null);
+    public ResponseEntity<String> saida(final Long id) {
+        Movimentacao movimentacao = movimentacaoRepository.findById(id).orElse(null);
 
-        // Registrar a data e hora de saída
-        movimentacao.setSaida(LocalDateTime.now());
+        if (movimentacao != null) {
+            BigDecimal valorHora = configuracaoService.getValorHora();
+            movimentacao.setValorHora(valorHora);
+            movimentacao.setSaida(LocalDateTime.now());
+            movimentacao.calcularHorasUtilizadas();
+            movimentacao.calcularValorTotal();
 
-        // Calcular as horas utilizadas
-        movimentacao.calcularHorasUtilizadas();
+            movimentacao.gerarRelatorio();
 
-        // Calcular o valor a pagar
-        movimentacao.calcularValorTotal();
-
-        // Gerar o relatório da movimentação
-        movimentacao.gerarRelatorio();
-
-
-        // Salvar as alterações no banco de dados
-        movimentacaoRepository.save(movimentacao);
+            movimentacaoRepository.save(movimentacao);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("erro na saida");
+        }
+        return ResponseEntity.ok().body("Deu certo");
     }
-
     @Transactional(rollbackOn = Exception.class)
     public void deletar(final Long id) {
         final Movimentacao moviBanco = this.movimentacaoRepository.findById(id).orElse(null);

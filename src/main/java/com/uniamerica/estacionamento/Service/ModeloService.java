@@ -30,6 +30,9 @@ public class ModeloService {
         Assert.isTrue(modelo.getMarca() != null, "Erro, sem marca.");
         Assert.isTrue(!modelo.getNome().isBlank(), "Erro, nome vazio.");
 
+        String regex = ".*\\d+.*";
+        Assert.isTrue(!modelo.getNome().matches(regex), "Escreva so letras");
+
         this.modeloRepository.save(modelo);
     }
 

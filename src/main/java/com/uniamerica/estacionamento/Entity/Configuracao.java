@@ -1,13 +1,11 @@
 package com.uniamerica.estacionamento.Entity;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -43,4 +41,8 @@ public class Configuracao extends Abstract{
     @Getter @Setter
     @Column(name = "vagas_carro", nullable = true, unique = true)
     private Integer vagasCarro;
+    @Column(name = "data", nullable = true)
+    @OrderBy("data DESC")
+    private LocalDateTime data;
+
 }

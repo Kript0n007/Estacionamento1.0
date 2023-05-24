@@ -4,11 +4,17 @@ import com.uniamerica.estacionamento.Entity.Configuracao;
 import com.uniamerica.estacionamento.Respository.ConfiguracaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import java.awt.print.Pageable;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class ConfiguracaoService {
@@ -63,6 +69,16 @@ public class ConfiguracaoService {
             configBanco.setAtivo(false);
             this.configuracaoRepository.delete(configBanco);
         }
+    }
+
+    public BigDecimal getValorHora() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "data");
+        List<Configuracao> configuracoes = configuracaoRepository.findLatestConfiguracao(sort);
+        if (!configuracoes.isEmpty()) {
+            Configuracao configuracao = configuracoes.get(0);
+            return configuracao.getValorHora();
+        }
+        return BigDecimal.ZERO;
     }
 }
 
