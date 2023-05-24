@@ -30,16 +30,14 @@ public class CondutorService {
     @Transactional(rollbackFor =  Exception.class)
     public ResponseEntity<String> cadastrar(final Condutor condutor) {
 
-        //Verifica o NOME
         Assert.isTrue(condutor.getNome() != null , "Error digite um numero");
+        Assert.isTrue(condutor.getNome().length() > 2 , "Nome nao fornecido");
 
-        //Verificar o CPF
         Assert.isTrue(condutor.getCpf() != null, "CPF, nao informado");
         String regexCpf = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$";
         Assert.isTrue(condutor.getCpf().matches(regexCpf), "Error cpf com mascara errada");
         Assert.isTrue(this.condutorRepository.findCpf(condutor.getCpf()).isEmpty(), "CPF já existente.");
 
-        //Verifica o TELEFONE
         Assert.isTrue(condutor.getTelefone() != null, "Error digite uma telefone");
         String regexTelefone = "\\+\\d{2}\\(\\d{3}\\)\\d{5}-\\d{4}";
         Assert.isTrue(condutor.getTelefone().matches(regexTelefone), "Mascara de telefone invalida");
