@@ -55,14 +55,17 @@ public class Movimentacao extends Abstract{
     private BigDecimal valorHoraMulta;
 
     public int calcularHorasUtilizadas() {
-        Duration duracao = Duration.between(entrada, saida);
+        Duration duracao = Duration.between(entrada,saida);
         long horas = duracao.toHours();
         return (int) horas;
     }
 
     public BigDecimal calcularValorTotal() {
         int horasUtilizadas = calcularHorasUtilizadas();
-        return valorHora.multiply(BigDecimal.valueOf(horasUtilizadas));
+        BigDecimal resultado = valorHora.multiply(BigDecimal.valueOf(horasUtilizadas));
+        resultado = resultado.subtract(BigDecimal.valueOf(10));
+        return resultado;
+
     }
 
 
@@ -73,7 +76,7 @@ public class Movimentacao extends Abstract{
         relatorio.append("Data e Hora de Entrada: ").append(entrada).append("\n");
         relatorio.append("Data e Hora de Saída: ").append(saida).append("\n");
         relatorio.append("Condutor: ").append(condutor.getNome()).append("\n");
-        relatorio.append("Veículo: ").append(veiculo.getModelo()).append("\n");
+        relatorio.append("Veículo: ").append(veiculo.getModelo().getNome()).append("\n");
         relatorio.append("Placa: ").append(veiculo.getPlaca()).append("\n");
         relatorio.append("Quantidade de Horas Utilizadas: ").append(calcularHorasUtilizadas()).append("\n");
         relatorio.append("Valor a Pagar: ").append(calcularValorTotal()).append("\n");

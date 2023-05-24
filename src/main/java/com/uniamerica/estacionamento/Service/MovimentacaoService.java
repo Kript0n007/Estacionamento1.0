@@ -69,7 +69,9 @@ public class MovimentacaoService {
             movimentacao.calcularHorasUtilizadas();
             movimentacao.calcularValorTotal();
 
-            movimentacao.gerarRelatorio();
+            String relatorio = movimentacao.gerarRelatorio();
+
+            System.out.println(relatorio);
 
             movimentacaoRepository.save(movimentacao);
         } else {

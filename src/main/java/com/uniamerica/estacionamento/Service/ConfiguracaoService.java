@@ -80,5 +80,6 @@ public class ConfiguracaoService {
         }
         return BigDecimal.ZERO;
     }
+
 }
 
