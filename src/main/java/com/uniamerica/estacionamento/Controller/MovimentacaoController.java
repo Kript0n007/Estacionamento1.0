@@ -1,5 +1,6 @@
 package com.uniamerica.estacionamento.Controller;
 
+import com.uniamerica.estacionamento.Entity.Configuracao;
 import com.uniamerica.estacionamento.Entity.Movimentacao;
 import com.uniamerica.estacionamento.Respository.ModeloRepository;
 import com.uniamerica.estacionamento.Respository.MovimentacaoRepository;
@@ -35,6 +36,10 @@ public class MovimentacaoController {
     @PostMapping
     public ResponseEntity<?> cadastrar (@RequestBody final Movimentacao movimentacao){
         try{
+
+            Configuracao configuracao = new Configuracao();
+            movimentacao.setValorHora(configuracao.getValorHora());
+
             this.movimentacaoRepository.save(movimentacao);
             return ResponseEntity.ok("Registro realizado.");
         }catch (Exception erro){

@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalTime;
+
 @Entity
 @Table(name = "tb_veiculos", schema = "public")
 public class Veiculo extends Abstract{
@@ -29,4 +31,6 @@ public class Veiculo extends Abstract{
     @Enumerated(EnumType.STRING)
     @Column(name = "cor", nullable = true)
     private Cor cor;
+
+
 }

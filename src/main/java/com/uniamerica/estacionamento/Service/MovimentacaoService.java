@@ -57,6 +57,8 @@ public class MovimentacaoService {
         final Movimentacao moviBanco = this.movimentacaoRepository.findById(id).orElse(null);
         Assert.isTrue(moviBanco != null, "nao foi possivel encontrar o registro");
 
+        movimentacao.setEntrada(moviBanco.getEntrada());
+        movimentacao.setCadastro(moviBanco.getCadastro());
 
         this.movimentacaoRepository.save(movimentacao);
     }

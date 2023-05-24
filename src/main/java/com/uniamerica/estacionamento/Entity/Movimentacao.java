@@ -88,4 +88,9 @@ public class Movimentacao extends Abstract{
 
         return relatorio.toString();
     }
+
+    @PrePersist
+    public void Carregar() {
+        this.entrada = LocalDateTime.now();
+    }
 }
