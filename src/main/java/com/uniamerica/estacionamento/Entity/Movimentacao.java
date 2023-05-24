@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -52,4 +53,39 @@ public class Movimentacao extends Abstract{
     @Getter @Setter
     @Column(name = "valor_hora_multa")
     private BigDecimal valorHoraMulta;
+
+    public int calcularHorasUtilizadas() {
+        Duration duracao = Duration.between(entrada, saida);
+        long horas = duracao.toHours();
+        return (int) horas;
+    }
+
+    public BigDecimal calcularValorTotal() {
+        int horasUtilizadas = calcularHorasUtilizadas();
+        return valorHora.multiply(BigDecimal.valueOf(horasUtilizadas));
+    }
+
+    public String gerarRelatorio() {
+        // Crie a estrutura do relatório com as informações necessárias
+        StringBuilder relatorio = new StringBuilder();
+        relatorio.append("Data e Hora de Entrada: ").append(entrada).append("\n");
+        relatorio.append("Data e Hora de Saída: ").append(saida).append("\n");
+        relatorio.append("Condutor: ").append(condutor.getNome()).append("\n");
+        relatorio.append("Veículo: ").append(veiculo.getModelo()).append("\n");
+        relatorio.append("Quantidade de Horas Utilizadas: ").append(calcularHorasUtilizadas()).append("\n");
+        relatorio.append("Valor a Pagar: ").append(calcularValorTotal()).append("\n");
+        // Adicione outras informações relevantes ao relatório
+
+        System.out.println("Relatório da Movimentação:");
+        System.out.println("Data e Hora de Entrada: " + entrada);
+        System.out.println("Data e Hora de Saída: " + saida);
+        System.out.println("Condutor: " + condutor.getNome());
+        System.out.println("Veículo: " + veiculo.getModelo().getNome());
+        System.out.println("Placa: " + veiculo.getPlaca());
+        System.out.println("Quantidade de Horas: " + calcularHorasUtilizadas());
+        System.out.println("Valor a Pagar: " + valorTotal);
+        System.out.println("Valor de Desconto: " + valorDesconto);
+
+        return relatorio.toString();
+    }
 }

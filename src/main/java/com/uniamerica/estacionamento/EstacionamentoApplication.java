@@ -9,6 +9,4 @@ public class EstacionamentoApplication {
 		SpringApplication.run(EstacionamentoApplication.class, args);
 	}
 
-
-
 }

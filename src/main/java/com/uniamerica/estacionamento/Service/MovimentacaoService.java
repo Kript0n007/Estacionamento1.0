@@ -34,7 +34,7 @@ public class MovimentacaoService {
     @Autowired
     private CondutorRepository condutorRepository;
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public void cadastrar(Movimentacao movimentacao){
 
         Assert.isTrue(movimentacao.getVeiculo() != null, "Veiculo nao informado");
@@ -46,7 +46,7 @@ public class MovimentacaoService {
 
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public void editar(final Long id, Movimentacao movimentacao){
 
         Assert.isTrue(movimentacao.getVeiculo() != null, "Veiculo nao informado");
@@ -61,58 +61,28 @@ public class MovimentacaoService {
         this.movimentacaoRepository.save(movimentacao);
     }
     @Transactional(rollbackOn = Exception.class)
-    public void saida (final Long id){
+    public void saida(final Long id) {
 
         final Movimentacao movimentacao = this.movimentacaoRepository.findById(id).orElse(null);
 
-        final Configuracao configuracao = this.configuracaoRepository.findById(1L).orElse(null);
-
-        final Condutor condutor = this.condutorRepository.findById(movimentacao.getCondutor().getId()).orElse(null);
-
-
-
-        //Verifica se a configuração foi encontrada
-        Assert.isTrue(configuracao != null, "Configuração não encontrada.");
-        //Verifica se a movimentação foi encontrada
-        Assert.isTrue(movimentacao != null, "Movimentação não encontrada.");
-
-        //Definida a hora e data atual ao atributo saida
+        // Registrar a data e hora de saída
         movimentacao.setSaida(LocalDateTime.now());
 
-        //É criada uma variavel saida com a hora e data atual
-        final LocalDateTime saida = LocalDateTime.now();
-        //Calculo que subtrai data e hora de entrada da data e hora atual de saida
-        Duration duracao = Duration.between(movimentacao.getEntrada(), saida);
+        // Calcular as horas utilizadas
+        movimentacao.calcularHorasUtilizadas();
 
-        //O valor de duração de horas é convertido em BigDecimal e atribuido a horas
-        final BigDecimal horas = BigDecimal.valueOf(duracao.toHoursPart());
-        //A duração de minutos é convertida em BigDecimal e dividida por 60 para obter minutos em decimal, valor arredondado com 2 casas decimais usando half even
-        final BigDecimal minutos = BigDecimal.valueOf(duracao.toMinutesPart()).divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_EVEN);
-        //O preço é calculado multiplicando o valor de hora pelo numero de horas e adicionando o valor hora multiplicado pelos minutos
-        BigDecimal preco = configuracao.getValorHora().multiply(horas).add(configuracao.getValorHora().multiply(minutos));
+        // Calcular o valor a pagar
+        movimentacao.calcularValorTotal();
 
-        movimentacao.setHora(duracao.toHoursPart());//O numero de horas da duração é atribuido ao atributo hora
-        movimentacao.setMinutos(duracao.toMinutesPart());//O numero de minutos de duração é atribuido ao atributo minutos
-
-        BigDecimal valor = configuracao.getValorHora().multiply(horas).add(configuracao.getValorHora().multiply(minutos));
-
-        movimentacao.setValorTotal(valor);
-        condutor.setTempoPago(valor);
+        // Gerar o relatório da movimentação
+        movimentacao.gerarRelatorio();
 
 
-
-//        Relatorio relatorio = new Relatorio(moviBanco.getEntrada(), moviBanco.getSaida(), moviBanco.getCondutor(),
-//                moviBanco.getVeiculo(), moviBanco.getTempoHora(), condutor.getTempoDesconto(),
-//                precos.subtract(valor_desconto).setScale(2,RoundingMode.HALF_EVEN),
-//                moviBanco.getValorDeconto());
-
-
-        this.condutorRepository.save(condutor);
-
-        this.movimentacaoRepository.save(movimentacao);
+        // Salvar as alterações no banco de dados
+        movimentacaoRepository.save(movimentacao);
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public void deletar(final Long id) {
         final Movimentacao moviBanco = this.movimentacaoRepository.findById(id).orElse(null);
 
@@ -136,4 +106,6 @@ public class MovimentacaoService {
         }
         return ResponseEntity.ok(movimentacao);
     }
+
+
 }

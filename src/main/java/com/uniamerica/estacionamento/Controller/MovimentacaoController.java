@@ -61,12 +61,12 @@ public class MovimentacaoController {
     }
 
     @PutMapping("/saida/{id}")
-    public ResponseEntity<?> saida(@RequestParam("id") final Long id){
+    public ResponseEntity<?> saida(@PathVariable("id") final Long id){
         try{
             this.movimentacaoService.saida(id);
-            return ResponseEntity.ok("Registro realizado.");
+            return ResponseEntity.ok("Registro realizado e relatorio gerado");
         } catch (RuntimeException erro){
-            return ResponseEntity.badRequest().body("Erro"+erro.getMessage());
+            return ResponseEntity.badRequest().body("Não conseguio sair"+erro.getMessage());
         }
     }
 
