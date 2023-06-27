@@ -14,7 +14,7 @@ public abstract class Abstract {
     private Long id;
     @Getter @Setter
     private LocalDateTime cadastro;
-    @Getter
+    @Getter @Setter
     private LocalDateTime atualizacao;
     @Getter @Setter
     private boolean ativo;
@@ -24,6 +24,7 @@ public abstract class Abstract {
     public void prePersiste(){
         this.cadastro=LocalDateTime.now();
         this.ativo=true;
+        this.atualizacao=LocalDateTime.now();
     }
 
     @PreUpdate

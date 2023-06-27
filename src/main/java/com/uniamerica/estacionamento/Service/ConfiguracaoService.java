@@ -27,7 +27,7 @@ public class ConfiguracaoService {
         try {
             Assert.isTrue(config.getValorHora() != null, "Valor hora não informado");
             Assert.isTrue(config.getValorMinutoMulta() != null, "Valor minuto multa não informado");
-            Assert.isTrue(config.getIncioExpediente() != null, "Inicio expediente não informado");
+            Assert.isTrue(config.getInicioExpediente() != null, "Inicio expediente não informado");
             Assert.isTrue(config.getFimExpediente() != null, "Fim expediente não informado");
             Assert.isTrue(config.getTempoParaDesconto() != null, "Tempo desconto não informado");
             Assert.isTrue(config.getGerarDesconto() != null, "Gerar desconto não informado");
@@ -47,13 +47,13 @@ public class ConfiguracaoService {
 //        Assert.isTrue(!config.getId().equals(id), "Não foi possivel identificar o registro informado");
             Assert.isTrue(config.getValorHora() != null, "Valor hora não informado");
             Assert.isTrue(config.getValorMinutoMulta() != null, "Valor minuto multa não informado");
-            Assert.isTrue(config.getIncioExpediente() != null, "Inicio expediente não informado");
+            Assert.isTrue(config.getInicioExpediente() != null, "Inicio expediente não informado");
             Assert.isTrue(config.getFimExpediente() != null, "Fim expediente não informado");
             Assert.isTrue(config.getTempoParaDesconto() != null, "Tempo desconto não informado");
             Assert.isTrue(config.getGerarDesconto() != null, "Gerar desconto não informado");
             Assert.isTrue(config.getVagasCarro() != null, "Vagas de carro não informado");
-            Assert.isTrue(config.getVagasVans() != null, "Vagas de van não informado");
-            Assert.isTrue(config.getVagasMotos() != null, "Vagas de moto não informado");
+            Assert.isTrue(config.getVagasVan() != null, "Vagas de van não informado");
+            Assert.isTrue(config.getVagasMoto() != null, "Vagas de moto não informado");
 
         return this.configuracaoRepository.save(config);
 

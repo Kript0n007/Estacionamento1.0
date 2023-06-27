@@ -68,8 +68,6 @@ public class Movimentacao extends Abstract{
 
     }
 
-
-
     public String gerarRelatorio() {
         // Crie a estrutura do relatório com as informações necessárias
         StringBuilder relatorio = new StringBuilder();

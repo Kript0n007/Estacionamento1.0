@@ -19,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/veiculo")
+@CrossOrigin("http://localhost:3000")
 public class VeiculoController {
 
     @Autowired
@@ -51,7 +52,7 @@ public class VeiculoController {
         }
     }
 
-     @PutMapping
+     @PutMapping("/editar")
     public ResponseEntity<?> editar(@RequestParam("id") final Long id, @RequestBody final Veiculo veiculo){
         try{
             final Veiculo veiculoBanco = this.veiculoRepository.findById(id).orElse(null);

@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/configuracao")
+@CrossOrigin("http://localhost:3000")
 public class ConfiguracaoController {
 
     @Autowired
@@ -55,13 +56,13 @@ public class ConfiguracaoController {
             configuracaoBanco.setAtivo(configuracao.isAtivo());
             configuracaoBanco.setValorHora(configuracao.getValorHora());
             configuracaoBanco.setValorMinutoMulta(configuracao.getValorMinutoMulta());
-            configuracaoBanco.setIncioExpediente(configuracao.getIncioExpediente());
+            configuracaoBanco.setInicioExpediente(configuracao.getInicioExpediente());
             configuracaoBanco.setFimExpediente(configuracao.getFimExpediente());
             configuracaoBanco.setTempoParaDesconto(configuracao.getTempoParaDesconto());
             configuracaoBanco.setTempoDeDesconto(configuracao.getTempoDeDesconto());
             configuracaoBanco.setGerarDesconto(configuracao.getGerarDesconto());
-            configuracaoBanco.setVagasMotos(configuracao.getVagasMotos());
-            configuracaoBanco.setVagasVans(configuracao.getVagasVans());
+            configuracaoBanco.setVagasMoto(configuracao.getVagasMoto());
+            configuracaoBanco.setVagasVan(configuracao.getVagasVan());
             configuracaoBanco.setVagasCarro(configuracao.getVagasCarro());
 
             this.configuracaoRepository.save(configuracaoBanco);

@@ -7,6 +7,7 @@ import com.uniamerica.estacionamento.Respository.MarcaRepository;
 import com.uniamerica.estacionamento.Service.MarcaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/marca")
+@CrossOrigin("http://localhost:3000")
 public class MarcaController {
 
     @Autowired
@@ -34,7 +36,7 @@ public class MarcaController {
         return ResponseEntity.ok(this.marcaRepository.findAll());
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<?> cadastrar(@RequestBody final Marca marca){
         try{
             this.marcaService.cadastrar(marca);
@@ -44,7 +46,7 @@ public class MarcaController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/editar")
     public ResponseEntity<?> editar (@RequestParam("id") final Long id, @RequestBody final Marca marca){
         try{
             final Marca marcaBanco = this.marcaRepository.findById(id).orElse(null);
@@ -61,8 +63,8 @@ public class MarcaController {
             return ResponseEntity.internalServerError().body("Erro"+erro.getMessage());
         }
     }
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deletar(@PathVariable("id") final Long id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deletar(@Param("id") final Long id) {
         try {
             this.marcaService.deletar(id);
             return ResponseEntity.ok("Success");

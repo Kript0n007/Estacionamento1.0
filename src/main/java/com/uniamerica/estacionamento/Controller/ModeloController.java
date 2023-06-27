@@ -7,6 +7,7 @@ import com.uniamerica.estacionamento.Service.ModeloService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/modelo")
+@CrossOrigin("http://localhost:3000")
 public class ModeloController {
 
     @Autowired
@@ -35,9 +37,8 @@ public class ModeloController {
         return ResponseEntity.ok(this.modeloRepository.findAll());
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<?> cadastrar(@RequestBody final Modelo modelo){
-
         try{
             this.modeloService.cadastro(modelo);
             return ResponseEntity.ok("Registro realizado com sucesso");
@@ -50,7 +51,7 @@ public class ModeloController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/editar")
     public ResponseEntity<?> editar(@RequestParam("id") final Long id, @RequestBody final Modelo modelo){
         try{
             final Modelo modeloData = this.modeloRepository.findById(id).orElse(null);

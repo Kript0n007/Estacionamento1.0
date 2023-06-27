@@ -19,7 +19,7 @@ public class Configuracao extends Abstract{
     private BigDecimal valorMinutoMulta;
     @Getter @Setter
     @Column(name = "inicio_expediente", nullable = true, unique = true)
-    private LocalTime incioExpediente;
+    private LocalTime inicioExpediente;
     @Getter @Setter
     @Column(name = "fim_expediente", nullable = true, unique = true)
     private LocalTime fimExpediente;
@@ -34,10 +34,10 @@ public class Configuracao extends Abstract{
     private Boolean gerarDesconto;
     @Getter @Setter
     @Column(name = "vagas_moto", nullable = true, unique = true)
-    private Integer vagasMotos;
+    private Integer vagasMoto;
     @Getter @Setter
     @Column(name = "vagas_vans", nullable = true, unique = true)
-    private Integer vagasVans;
+    private Integer vagasVan;
     @Getter @Setter
     @Column(name = "vagas_carro", nullable = true, unique = true)
     private Integer vagasCarro;

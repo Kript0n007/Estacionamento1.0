@@ -7,6 +7,7 @@ import com.uniamerica.estacionamento.Respository.MovimentacaoRepository;
 import com.uniamerica.estacionamento.Service.CondutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/condutor")
+@CrossOrigin("http://localhost:3000")
 public class CondutorController {
 
     @Autowired
@@ -51,8 +53,8 @@ public class CondutorController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<?> editar (@RequestParam("id") final Long id, @RequestBody final Condutor condutor){
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editar (@PathVariable("id") final Long id, @RequestBody final Condutor condutor){
         try{
             final Condutor condutorValue = this.condutorRepository.findById(id).orElse(null);
 
@@ -69,8 +71,8 @@ public class CondutorController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deletar(@PathVariable("id") final Long id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deletar(@Param("id") final Long id) {
         try {
             this.condutorService.deletar(id);
             return ResponseEntity.ok("Success");
