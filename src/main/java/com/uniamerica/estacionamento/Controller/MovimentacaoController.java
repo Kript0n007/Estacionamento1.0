@@ -2,6 +2,7 @@ package com.uniamerica.estacionamento.Controller;
 
 import com.uniamerica.estacionamento.Entity.Configuracao;
 import com.uniamerica.estacionamento.Entity.Movimentacao;
+import com.uniamerica.estacionamento.Recibo;
 import com.uniamerica.estacionamento.Respository.ModeloRepository;
 import com.uniamerica.estacionamento.Respository.MovimentacaoRepository;
 import com.uniamerica.estacionamento.Service.MovimentacaoService;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/movimentacao")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:3001")
 public class MovimentacaoController {
 
     @Autowired
@@ -48,8 +49,8 @@ public class MovimentacaoController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<?> editar (@RequestParam("id") final Long id, @RequestBody final Movimentacao movimentacao){
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editar (@PathVariable("id") final Long id, @RequestBody final Movimentacao movimentacao){
         try{
             final Movimentacao movimentacaoBanco = this.movimentacaoRepository.findById(id).orElse(null);
 
@@ -66,10 +67,20 @@ public class MovimentacaoController {
         }
     }
 
-    @PutMapping("/saida/{id}")
-    public ResponseEntity<?> saida(@PathVariable("id") final Long id){
+//    @PutMapping("/saida/{id}")
+//    public ResponseEntity<?> saida(@PathVariable("id") final Long id){
+//        try{
+//            Recibo recibo = this.movimentacaoService.saida(id);
+//            return ResponseEntity.ok(recibo);
+//        } catch (RuntimeException erro){
+//            return ResponseEntity.badRequest().body("Não conseguio sair"+erro.getMessage());
+//        }
+//    }
+
+    @PutMapping("/sair/{id}")
+    public ResponseEntity<?> sair(@PathVariable("id") final Long id){
         try{
-            this.movimentacaoService.saida(id);
+            this.movimentacaoService.sair(id);
             return ResponseEntity.ok("Registro realizado e relatorio gerado");
         } catch (RuntimeException erro){
             return ResponseEntity.badRequest().body("Não conseguio sair"+erro.getMessage());

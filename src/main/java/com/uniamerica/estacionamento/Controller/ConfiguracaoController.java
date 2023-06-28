@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/configuracao")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:3001")
 public class ConfiguracaoController {
 
     @Autowired
@@ -35,7 +35,7 @@ public class ConfiguracaoController {
     public ResponseEntity<?> cadastrar(@RequestBody final Configuracao configuracao) {
         try {
             this.configuracaoService.cadastrar(configuracao);
-            return ResponseEntity.ok(configuracao);
+            return ResponseEntity.ok("Configuraçao Cadastrada");
         } catch (RuntimeException erro) {
             return ResponseEntity.badRequest().body("Erro ao cadastrar configuração: " + erro.getMessage());
         }

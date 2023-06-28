@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -27,6 +28,9 @@ public class Movimentacao extends Abstract{
     @Column(name = "saida")
     private LocalDateTime saida;
     @Getter @Setter
+    @Column(name = "tempo")
+    private Long tempo;
+    @Getter @Setter
     @Column(name = "hora")
     private Integer hora;
     @Getter @Setter
@@ -40,7 +44,7 @@ public class Movimentacao extends Abstract{
     private LocalTime tempoMulta;
     @Getter @Setter
     @Column(name = "valor_desconto")
-    private BigDecimal valorDesconto;
+    private Long valorDesconto;
     @Getter @Setter
     @Column(name = "valor_multa")
     private BigDecimal valorMulta;
@@ -53,39 +57,66 @@ public class Movimentacao extends Abstract{
     @Getter @Setter
     @Column(name = "valor_hora_multa")
     private BigDecimal valorHoraMulta;
+    public BigDecimal calcularValorDesconto(Duration duracao) {
+        long minutosUtilizados = duracao.toMinutes();
+        if (minutosUtilizados >= 120) { // 2 horas em minutos
+            return BigDecimal.valueOf(5); // 5 reais de desconto
+        } else {
+            return BigDecimal.ZERO;
+        }
+    }
 
-    public int calcularHorasUtilizadas() {
-        Duration duracao = Duration.between(entrada,saida);
-        long horas = duracao.toHours();
-        return (int) horas;
+    public Duration calcularTempoUtilizado() {
+        if (saida.isBefore(entrada)) {
+            return Duration.ZERO; // Retorna duração zero se a data de saída for anterior à data de entrada
+        }
+        return Duration.between(entrada, saida);
+    }
+
+    public BigDecimal calcularValorDesconto() {
+        Duration duracao = calcularTempoUtilizado();
+        long minutosUtilizados = duracao.toMinutes();
+        if (minutosUtilizados >= 120) {
+            return BigDecimal.valueOf(5);
+        } else {
+            return BigDecimal.ZERO;
+        }
     }
 
     public BigDecimal calcularValorTotal() {
-        int horasUtilizadas = calcularHorasUtilizadas();
-        BigDecimal resultado = valorHora.multiply(BigDecimal.valueOf(horasUtilizadas));
-        resultado = resultado.subtract(BigDecimal.valueOf(10));
-        return resultado;
+        Duration duracao = calcularTempoUtilizado();
+        long minutosUtilizados = duracao.toMinutes();
+        BigDecimal valorPorMinuto = valorHora.divide(BigDecimal.valueOf(60), 10, RoundingMode.HALF_UP);
+        BigDecimal valorCalculado = valorPorMinuto.multiply(BigDecimal.valueOf(minutosUtilizados));
+        BigDecimal valorDesconto = calcularValorDesconto(duracao);
+        BigDecimal valorFinal = valorCalculado.subtract(valorDesconto);
 
+        return valorFinal.setScale(2, RoundingMode.HALF_UP);
     }
-
     public String gerarRelatorio() {
-        // Crie a estrutura do relatório com as informações necessárias
+        Duration duracao = calcularTempoUtilizado();
+        long minutosUtilizados = duracao.toMinutes();
+        long horas = minutosUtilizados / 60;
+        long minutosRestantes = minutosUtilizados % 60;
+
         StringBuilder relatorio = new StringBuilder();
         relatorio.append("Data e Hora de Entrada: ").append(entrada).append("\n");
         relatorio.append("Data e Hora de Saída: ").append(saida).append("\n");
         relatorio.append("Condutor: ").append(condutor.getNome()).append("\n");
         relatorio.append("Veículo: ").append(veiculo.getModelo().getNome()).append("\n");
         relatorio.append("Placa: ").append(veiculo.getPlaca()).append("\n");
-        relatorio.append("Quantidade de Horas Utilizadas: ").append(calcularHorasUtilizadas()).append("\n");
-        relatorio.append("Valor a Pagar: ").append(calcularValorTotal()).append("\n");
-        relatorio.append("Valor Desconto: ").append(valorDesconto);
-        // Adicione outras informações relevantes ao relatório
+        relatorio.append("Tempo Utilizado: ").append(horas).append(" horas e ").append(minutosRestantes).append(" minutos\n");
+        relatorio.append("Valor a Pagar: R$").append(calcularValorTotal()).append("\n");
+        relatorio.append("Valor Desconto: R$").append(calcularValorDesconto(duracao));
+
+        if (saida.isBefore(entrada)) {
+            return "Erro: A data e hora de saída não podem ser anteriores à data e hora de entrada.";
+        }
 
         return relatorio.toString();
     }
-
-    @PrePersist
-    public void Carregar() {
-        this.entrada = LocalDateTime.now();
-    }
+//    @PrePersist
+//    public void Carregar() {
+//        this.entrada = LocalDateTime.now();
+//    }
 }

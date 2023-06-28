@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
     @RestController
     @RequestMapping("/relatorio")
-    @CrossOrigin("http://localhost:3000")
+    @CrossOrigin("http://localhost:3001")
     public class GerarRelatorio {
 
         @Autowired
@@ -27,14 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
         @GetMapping("/gerar")
         public ResponseEntity<String> gerarRelatorio() {
             try {
-                // Apenas como exemplo, obtendo a primeira movimentação.
-                // Você precisa ajustar isso de acordo com sua lógica de negócios.
                 Movimentacao movimentacao = movimentacaoRepository.findAll().get(0);
                 return new ResponseEntity<>(movimentacao.gerarRelatorio(), HttpStatus.OK);
             } catch (Exception e) {
-                // Log do erro
+
                 e.printStackTrace();
-                // Retornar uma resposta de erro
+
                 return new ResponseEntity<>("Erro ao gerar relatório", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }

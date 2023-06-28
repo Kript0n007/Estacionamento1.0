@@ -1,18 +1,21 @@
 package com.uniamerica.estacionamento.Service;
 
+import com.uniamerica.estacionamento.Entity.Configuracao;
 import com.uniamerica.estacionamento.Entity.Movimentacao;
+import com.uniamerica.estacionamento.Recibo;
 import com.uniamerica.estacionamento.Respository.CondutorRepository;
 import com.uniamerica.estacionamento.Respository.ConfiguracaoRepository;
 import com.uniamerica.estacionamento.Respository.MovimentacaoRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Service
@@ -30,7 +33,7 @@ public class MovimentacaoService {
     @Autowired
     private ConfiguracaoService configuracaoService;
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void cadastrar(Movimentacao movimentacao){
 
         Assert.isTrue(movimentacao.getVeiculo() != null, "Veiculo nao informado");
@@ -42,7 +45,7 @@ public class MovimentacaoService {
 
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void editar(final Long id, Movimentacao movimentacao){
 
         Assert.isTrue(movimentacao.getVeiculo() != null, "Veiculo nao informado");
@@ -59,14 +62,14 @@ public class MovimentacaoService {
         this.movimentacaoRepository.save(movimentacao);
     }
 
-    public ResponseEntity<String> saida(final Long id) {
+    public ResponseEntity<String> sair(final Long id) {
         Movimentacao movimentacao = movimentacaoRepository.findById(id).orElse(null);
 
         if (movimentacao != null) {
             BigDecimal valorHora = configuracaoService.getValorHora();
             movimentacao.setValorHora(valorHora);
             movimentacao.setSaida(LocalDateTime.now());
-            movimentacao.calcularHorasUtilizadas();
+            movimentacao.calcularTempoUtilizado();
             movimentacao.calcularValorTotal();
 
             String relatorio = movimentacao.gerarRelatorio();
@@ -79,7 +82,8 @@ public class MovimentacaoService {
         }
         return ResponseEntity.ok().body("Deu certo");
     }
-    @Transactional(rollbackOn = Exception.class)
+
+    @Transactional(rollbackFor = Exception.class)
     public void deletar(final Long id) {
         final Movimentacao moviBanco = this.movimentacaoRepository.findById(id).orElse(null);
 
@@ -104,5 +108,43 @@ public class MovimentacaoService {
         return ResponseEntity.ok(movimentacao);
     }
 
+//    @Transactional(rollbackFor = Exception.class)
+//    public Recibo saida(final Long id){
+//
+//        Movimentacao movimentacao = this.movimentacaoRepository.findById(id).orElse(null);
+//
+//        Assert.isTrue(movimentacao.getSaida() == null, "Já foi finalizada");
+//
+//        movimentacao.setSaida(LocalDateTime.now());
+//
+//        Long tempoTotal = movimentacao.getEntrada().until(movimentacao.getSaida(), ChronoUnit.HOURS);
+//
+//        movimentacao.setTempo(tempoTotal);
+//
+//        Configuracao configuracao = this.configuracaoRepository.findById(1L).orElse(null);
+//
+//        BigDecimal horas = new BigDecimal(movimentacao.getTempo());
+//
+//        BigDecimal valorTotal = configuracao.getValorHora().multiply(horas);
+//
+//        movimentacao.setValorTotal(valorTotal);
+//
+//        Long desconto = movimentacao.getTempo() / configuracao.getTempoParaDesconto();
+//
+//        movimentacao.setValorDesconto(desconto);
+//
+//        System.out.println(desconto);
+//
+//        BigDecimal calculo = new BigDecimal(desconto).multiply(configuracao.getTempoDeDesconto());
+//
+//        BigDecimal total = movimentacao.getValorTotal().subtract(calculo);
+//
+//        movimentacao.setValorTotal(total);
+//
+//        this.movimentacaoRepository.save(movimentacao);
+//
+//        return new Recibo(movimentacao.getEntrada(), movimentacao.getSaida(), movimentacao.getCondutor(),
+//                movimentacao.getVeiculo(), movimentacao.getTempo(), configuracao.getTempoParaDesconto(), movimentacao.getValorTotal(), movimentacao.getValorDesconto());
+//    }
 
 }

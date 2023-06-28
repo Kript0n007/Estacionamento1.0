@@ -10,12 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Eduardo Sganderla
- *
- * @version 1.0.0, 17/05/2023
- * @since 1.0.0
- */
+
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
 

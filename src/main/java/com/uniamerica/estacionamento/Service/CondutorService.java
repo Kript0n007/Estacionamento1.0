@@ -40,7 +40,7 @@ public class CondutorService {
         Assert.isTrue(condutor.getCpf().matches(regexCpf), "Error cpf com mascara errada");
         Assert.isTrue(this.condutorRepository.findCpf(condutor.getCpf()).isEmpty(), "CPF já existente.");
 
-        Assert.isTrue(condutor.getTelefone() != null, "Error digite uma telefone");
+        Assert.isTrue(condutor.getTelefone() != null, "Error digite um telefone");
         String regexTelefone = "\\+\\d{2}\\(\\d{3}\\)\\d{5}-\\d{4}";
         Assert.isTrue(condutor.getTelefone().matches(regexTelefone), "Mascara de telefone invalida");
         Assert.isTrue(this.condutorRepository.findTelefone(condutor.getTelefone()).isEmpty(), "Telefone já existente.");

@@ -22,6 +22,8 @@ public class ConfiguracaoService {
     @Autowired
     private ConfiguracaoRepository configuracaoRepository;
 
+
+
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<String> cadastrar(final Configuracao config) {
         try {
@@ -31,6 +33,10 @@ public class ConfiguracaoService {
             Assert.isTrue(config.getFimExpediente() != null, "Fim expediente não informado");
             Assert.isTrue(config.getTempoParaDesconto() != null, "Tempo desconto não informado");
             Assert.isTrue(config.getGerarDesconto() != null, "Gerar desconto não informado");
+//            String RegexEx = "^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$";
+
+//            Assert.isTrue(config.getInicioExpediente().equals(RegexEx));
+
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.internalServerError().body("Erro ao atualizar configuração: " + e.getRootCause().getMessage());
         }
@@ -55,8 +61,9 @@ public class ConfiguracaoService {
             Assert.isTrue(config.getVagasVan() != null, "Vagas de van não informado");
             Assert.isTrue(config.getVagasMoto() != null, "Vagas de moto não informado");
 
-        return this.configuracaoRepository.save(config);
 
+
+        return this.configuracaoRepository.save(config);
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -25,8 +25,8 @@ public class MarcaService {
         public void cadastrar(final Marca marca){
             Assert.isTrue(!marca.getNome().isBlank(), "Erro, nome vazio");
             Assert.isTrue(this.marcaRepository.findNome(marca.getNome()).isEmpty(), "Marca já existente.");
-            //String regex = ".*\\d+.*";
-            //Assert.isTrue(!marca.getNome().matches(regex), "Escreva so letras");
+            String regex = ".*\\d+.*";
+//            Assert.isTrue(!marca.matches(regex), "Escreva so letras");
             this.marcaRepository.save(marca);
     }
 

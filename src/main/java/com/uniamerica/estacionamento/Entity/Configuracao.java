@@ -25,7 +25,7 @@ public class Configuracao extends Abstract{
     private LocalTime fimExpediente;
     @Getter @Setter
     @Column(name = "tempo_para_desconto", nullable = true, unique = true)
-    private Integer tempoParaDesconto;
+    private Long tempoParaDesconto;
     @Getter @Setter
     @Column(name = "tempo_de_desconto", nullable = true, unique = true)
     private BigDecimal tempoDeDesconto;
