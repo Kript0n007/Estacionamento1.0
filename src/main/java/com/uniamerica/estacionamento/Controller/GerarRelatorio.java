@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
     @RestController
     @RequestMapping("/relatorio")
-    @CrossOrigin("http://localhost:3001")
+    @CrossOrigin("http://localhost:3000")
     public class GerarRelatorio {
 
         @Autowired

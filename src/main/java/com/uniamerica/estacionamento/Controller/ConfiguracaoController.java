@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/configuracao")
-@CrossOrigin("http://localhost:3001")
+@CrossOrigin("http://localhost:3000")
 public class ConfiguracaoController {
 
     @Autowired
